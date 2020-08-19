@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="ks_office365_root_users_form" model="ir.ui.view">
+        <field name="name">office365.user.form</field>
+        <field name="model">ks.office.res.users</field>
+        <field name="arch" type="xml">
+            <form create="false">
+                <sheet>
+                    <div class="oe_title" style="margin: 2em 0em 4em 0em;">
+                        <h2><field name="ks_res_user_id" readonly="1"  options="{'no_open': True}"/></h2>
+                    </div>
+                    <notebook>
+                        <page string="Scope" class="auth_scope">
+                            <div class="row"></div>
+                        </page>
+                        <page string="Token">
+                                <field name="ks_auth_token" invisible="True"/>
+                                <field name="ks_is_login_user" invisible="True"/>
+                                <footer>
+                                    <div class="row" attrs="{'invisible': [('ks_auth_token', '=', False)]}" style="color: black;">
+                                        <div class="col-6">
+                                            <group>
+                                                <field name="ks_auth_user_name"/>
+                                            </group>
+                                        </div>
+                                        <div class="col-6">
+                                            <group>
+                                                <field name="ks_auth_user_email"/>
+                                            </group>
+                                        </div>
+                                    </div>
+
+                                    <div class="row" attrs="{'invisible': [('ks_auth_token', '=', False)]}">
+                                        <div class="col-6" style="text-align: end;">
+                                            <button string="Refresh Token" name="ks_refresh_token" type="object" class="btn btn-primary"
+                                                    style="width: 10em;"/>
+                                        </div>
+                                        <div class="col-6">
+                                            <button string="Clear Token" name="ks_clear_token" type="object" class="btn btn-primary"
+                                                    style="width: 10em;"/>
+                                        </div>
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <button name="ks_get_authentication_code" string="Generate Token" type="object"
+                                                class="btn btn-primary" style="width: 10em;"
+                                                attrs="{'invisible': [('ks_auth_token', '!=', False)]}"
+                                                groups="ks_office365_base.office_users_group_id,ks_office365_base.office_manager_group_id"/>
+                                    </div>
+                                </footer>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ks_office365_root_action_server" model="ir.actions.server">
+        <field name="name">Office365 User</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_ks_office_res_users" />
+        <field name="binding_model_id" ref="model_ks_office_res_users" />
+        <field name="state">code</field>
+        <field name="code">
+            action = model.ks_office_root_action()
+        </field>
+    </record>
+
+</odoo>

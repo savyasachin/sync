@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="ks_office365_calendar_filter" model="ir.ui.view">
+        <field name="name">office.calendar.filter</field>
+        <field name="model">ks_office365.logs</field>
+        <field name="inherit_id" ref="ks_office365_base.ks_office365_logs_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <filter string="Calendar" name="module_calendar" domain="[('ks_module_type', '=', 'calendar')]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="ks_office365_calendar_individual" model="ir.ui.view">
+        <field name="name">office.calendar.sync.individual</field>
+        <field name="model">ks_office365.settings</field>
+        <field name="inherit_id" ref="ks_office365_base.settings_form_view"/>
+        <field name="arch" type="xml">
+            <sheet position="inside">
+                <group string="Calendar">
+                    <group>
+                        <field name="ks_sync_individual"/>
+                    </group>
+                    <row>
+                        <div class="col-4">
+                            <group>
+                                <field name="ks_create_meeting_invite"/>
+                            </group>
+                        </div>
+                        <div class="col-4">
+                            <group>
+                                <field name="ks_new_meeting_invite"
+                                       attrs="{'invisible': [('ks_create_meeting_invite', '=', False)]}"/>
+                            </group>
+                        </div>
+                        <div class="col-4">
+                            <group>
+                                <field name="ks_update_meeting_invite"
+                                       attrs="{'invisible': [('ks_create_meeting_invite', '=', False)]}"/>
+                            </group>
+                        </div>
+                    </row>
+                </group>
+            </sheet>
+        </field>
+    </record>
+
+    <record id="ks_office_calendar_scope" model="ir.ui.view">
+        <field name="name">office365.res.users.calendar.scope</field>
+        <field name="model">ks.office.res.users</field>
+        <field name="inherit_id" ref="ks_office365_base.ks_office365_root_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page/div[@class='row']">
+                <div class="col-3">
+                    <group string="Calendar">
+                        <field name="ks_import_office_calendar" attrs="{'readonly': [('ks_auth_token', '!=', '')]}"/>
+                        <field name="ks_export_office_calendar" attrs="{'readonly': [('ks_auth_token', '!=', '')]}"/>
+                    </group>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="ks_office365_calendar_view_users_form" model="ir.ui.view">
+        <field name="name">office365.calendar.res.users.form</field>
+        <field name="model">ks.office.res.users</field>
+        <field name="inherit_id" ref="ks_office365_base.ks_office365_root_users_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Office365 Calendar" attrs="{'invisible': [('ks_auth_token', '=', False)]}">
+                    <div class="ks_invisible_fields">
+                        <field name="ks_import_office_calendar" invisible="1"/>
+                        <field name="ks_export_office_calendar" invisible="1"/>
+                    </div>
+                    <div class="row">
+                        <div class="col-3" style="padding: 10px;">
+                            <span style="font-size: 14px; font-weight: bold;">Sync using field</span>
+                        </div>
+                        <div class="col-3">
+                            <group>
+                               <field name="ks_sync_using_subject"/>
+                            </group>
+                        </div>
+                        <div class="col-3">
+                            <group>
+                               <field name="ks_sync_using_start_datetime"/>
+                            </group>
+                        </div>
+                        <div class="col-3">
+                            <group>
+                               <field name="ks_sync_using_end_datetime"/>
+                            </group>
+                        </div>
+                        <div class="col-3" style="padding: 10px;">
+                            <span style="font-size: 14px; font-weight: bold;">Sync events from last (in days)</span>
+                        </div>
+                        <div class="col-1" style="font-size: 14px; font-weight: bold; padding: 10px;">
+                            <field name="ks_calendar_sync_days_before" style="width: 58px; margin: -7px 63px 0px 4px;
+                                                                     text-align: initial;"
+                                   widget="integer"/>
+                        </div>
+                        <div class="col-2" style="flex-direction: row; width: 48%; justify-content: left;">
+                            <field name="ks_calendar_sync_using_days" style="margin: 10px 2px 6px 0px;"/>
+                        </div>
+                        <div class="col-3">
+                            <field name="ks_calendar_filter_domain" widget="domain" options="{'model': 'calendar.event', 'in_dialog': True}"/>
+                        </div>
+                        <div class="col-3">
+                            <group>
+                                <field name="ks_sync_deleted_event"/>
+                            </group>
+                        </div>
+                        <div class="col-6" style="text-align: center; margin-top: 10px;">
+                            <button string="Sync Office365 Calendar to Odoo" name="ks_get_events" type="object" class="btn btn-success"
+                            attrs="{'invisible': [('ks_import_office_calendar', '=', False)]}"/>
+                        </div>
+                        <div class="col-6" style="text-align: center; margin-top: 10px;">
+                            <button string="Sync Odoo Calendar to Office365" name="ks_post_events" type="object" class="btn btn-success"
+                            attrs="{'invisible': [('ks_export_office_calendar', '=', False)]}"/>
+                        </div>
+                    </div>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+</odoo>
